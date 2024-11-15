@@ -11,11 +11,11 @@ class Like extends Model
 
     public function user()
     {
-        return $this->belongsTo(User::class); // A like belongs to a user
+        return $this->belongsTo(User::class); 
     }
 
-    public function post()
+    public function posts()
     {
-        return $this->belongsTo(Post::class); // A like belongs to a post
+        return $this->belongsTo(Post::class); 
     }
 }

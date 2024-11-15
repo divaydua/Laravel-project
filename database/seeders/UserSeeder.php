@@ -11,17 +11,14 @@ use App\Models\Like;
 
 class UserSeeder extends Seeder
 {
-    /**
-     * Run the database seeds.
-     */
     public function run()
     {
         User::factory()
             ->count(10) // Create 10 users
             ->has(Profile::factory()) // Each user has 1 profile
             ->has(Post::factory()->count(3) // Each user has 3 posts
-                ->has(Comment::factory()->count(2)) // Each post has 2 comments
-                ->has(Like::factory()->count(1))) // Each post has 1 like
+            ->has(Comment::factory()->count(2)) // Each post has 2 comments
+            ->has(Like::factory()->count(1))) // Each post has 1 like
             ->create();
     }
 }

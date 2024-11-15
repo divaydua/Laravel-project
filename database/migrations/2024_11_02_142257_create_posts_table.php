@@ -18,16 +18,12 @@ return new class extends Migration
             $table->timestamps();                          // Timestamps for created_at and updated_at
         
             // Foreign key constraint
-            $table->foreign('user_id')
-                  ->references('id')->on('users')          // Ensure 'users' is plural
-                  ->onDelete('cascade')                    // Deletes posts if the user is deleted
-                  ->onUpdate('cascade');  
+            $table->foreign('user_id')->references('id')->on('users')         
+                  ->onDelete('cascade')->onUpdate('cascade');    // Deletes posts if the user is deleted
+
         });
     }
 
-    /**
-     * Reverse the migrations.
-     */
     public function down(): void
     {
         Schema::dropIfExists('posts');

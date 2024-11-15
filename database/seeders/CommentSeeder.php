@@ -7,13 +7,10 @@ use App\Models\Comment;
 
 class CommentSeeder extends Seeder
 {
-    /**
-     * Run the database seeds.
-     */
     public function run()
     {
         Comment::factory()
-            ->count(60) // Adjust the count as needed
+            ->count(10) 
             ->create();
     }
 }

@@ -7,17 +7,14 @@ use App\Models\Post;
 
 use Illuminate\Database\Eloquent\Factories\Factory;
 
-/**
- * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Post>
- */
 class PostFactory extends Factory
 {
-    protected $model = Post::class; // Correctly reference the Post model
+    protected $model = Post::class; 
 
     public function definition()
     {
         return [
-            'user_id' => User::factory(), // Create a user for this post
+            'user_id' => User::factory(), // Creates a user for this post
             'content' => $this->faker->text(200),
         ];
     }

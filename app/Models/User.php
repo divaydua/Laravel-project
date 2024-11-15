@@ -7,10 +7,12 @@ use Illuminate\Database\Eloquent\Model;
 
 class User extends Model
 {
+    
     use HasFactory;
 
-    // Define the table if it's not the plural of the model name
-    // protected $table = 'users'; // Uncomment if your table name is different
+    // Explicitly define the table name
+    protected $table = 'users';
+
 
     public function posts()
     {
