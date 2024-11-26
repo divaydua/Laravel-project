@@ -1,7 +1,8 @@
 <?php
 
 namespace App\Http\Controllers;
-
+use App\Models\Profile; // Import the Profile model
+use App\Models\User;    // Import the User model
 use Illuminate\Http\Request;
 
 class ProfileController extends Controller

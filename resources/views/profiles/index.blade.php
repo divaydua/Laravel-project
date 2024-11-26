@@ -35,5 +35,6 @@
         </tbody>
     </table>
 
+    <!-- Pagination Links -->
     {{ $profiles->links() }}
 @endsection
