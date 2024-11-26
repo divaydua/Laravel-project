@@ -12,6 +12,16 @@ use App\Http\Controllers\PostController;
 
 Route::resource('posts', PostController::class);
 
+use App\Http\Controllers\CommentController;
+
+// Comments routes for a specific post
+Route::get('/posts/{postId}/comments', [CommentController::class, 'index'])->name('comments.index');
+Route::get('/posts/{postId}/comments/create', [CommentController::class, 'create'])->name('comments.create');
+Route::post('/posts/{postId}/comments', [CommentController::class, 'store'])->name('comments.store');
+Route::get('/comments/{id}/edit', [CommentController::class, 'edit'])->name('comments.edit');
+Route::put('/comments/{id}', [CommentController::class, 'update'])->name('comments.update');
+Route::delete('/comments/{id}', [CommentController::class, 'destroy'])->name('comments.destroy');
+
 Route::get('/db-test', function () {
     try {
         DB::connection()->getPdo();
