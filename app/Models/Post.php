@@ -21,8 +21,8 @@ class Post extends Model
         return $this->hasMany(Comment::class); // A post can have many comments
     }
 
-    public function likes() 
+    public function likes()
     {
-        return $this->hasMany(Like::class); // A post can be liked by many users
+    return $this->morphMany(Like::class, 'likeable');
     }
 }

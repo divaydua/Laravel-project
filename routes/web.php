@@ -22,6 +22,16 @@ Route::get('/comments/{id}/edit', [CommentController::class, 'edit'])->name('com
 Route::put('/comments/{id}', [CommentController::class, 'update'])->name('comments.update');
 Route::delete('/comments/{id}', [CommentController::class, 'destroy'])->name('comments.destroy');
 
+use App\Http\Controllers\LikeController;
+
+// Routes for liking and unliking posts
+Route::post('/posts/{postId}/like', [LikeController::class, 'likePost'])->name('posts.like');
+Route::delete('/posts/{postId}/unlike', [LikeController::class, 'unlikePost'])->name('posts.unlike');
+
+// Routes for liking and unliking comments
+Route::post('/comments/{commentId}/like', [LikeController::class, 'likeComment'])->name('comments.like');
+Route::delete('/comments/{commentId}/unlike', [LikeController::class, 'unlikeComment'])->name('comments.unlike');
+
 Route::get('/db-test', function () {
     try {
         DB::connection()->getPdo();

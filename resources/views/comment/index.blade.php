@@ -4,7 +4,21 @@
 
 @section('content')
     <h1>Comments for "{{ $post->title }}"</h1>
+
     <a href="{{ route('comments.create', $post->id) }}" class="btn btn-primary">Add Comment</a>
+
+    @if ($comment->likes->where('user_id', auth()->id())->count())
+    <form action="{{ route('comments.unlike', $comment->id) }}" method="POST">
+        @csrf
+        @method('DELETE')
+        <button type="submit" class="btn btn-danger">Unlike</button>
+    </form>
+    @else
+    <form action="{{ route('comments.like', $comment->id) }}" method="POST">
+        @csrf
+        <button type="submit" class="btn btn-primary">Like</button>
+    </form>
+    @endif
 
     <ul>
         @foreach ($comments as $comment)
