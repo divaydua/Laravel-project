@@ -12,9 +12,9 @@ class ProfileFactory extends Factory
     public function definition()
     {
         return [
-            'post_id' => Post::factory(), // Create a post for this comment
-            'user_id' => User::factory(), // Create a user for this comment
-            'content' => $this->faker->text(100),
+            'user_id' => User::factory(), // Associate with a user
+            'bio' => $this->faker->sentence(), // Generate a fake bio
+            'profile_picture' => $this->faker->imageUrl(), // Generate a fake profile picture URL
         ];
     }
 }
