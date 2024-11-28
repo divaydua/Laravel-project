@@ -1,64 +1,40 @@
 <?php
 
-use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\UserController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\PostController;
+use App\Http\Controllers\CommentController;
+use Illuminate\Support\Facades\Route;
 
+// Public routes (accessible to everyone)
 Route::get('/', function () {
     return view('welcome');
 });
 
-use App\Http\Controllers\PostController;
+// Dashboard route (protected)
+Route::get('/dashboard', [DashboardController::class, 'index'])
+    ->middleware(['auth', 'verified'])
+    ->name('dashboard');
 
-Route::resource('posts', PostController::class);
-
-use App\Http\Controllers\CommentController;
-
-// Comments routes for a specific post
-Route::get('/posts/{postId}/comments', [CommentController::class, 'index'])->name('comments.index');
-Route::get('/posts/{postId}/comments/create', [CommentController::class, 'create'])->name('comments.create');
-Route::post('/posts/{postId}/comments', [CommentController::class, 'store'])->name('comments.store');
-Route::get('/comments/{id}/edit', [CommentController::class, 'edit'])->name('comments.edit');
-Route::put('/comments/{id}', [CommentController::class, 'update'])->name('comments.update');
-Route::delete('/comments/{id}', [CommentController::class, 'destroy'])->name('comments.destroy');
-
-use App\Http\Controllers\LikeController;
-
-// Routes for liking and unliking posts
-Route::post('/posts/{postId}/like', [LikeController::class, 'likePost'])->name('posts.like');
-Route::delete('/posts/{postId}/unlike', [LikeController::class, 'unlikePost'])->name('posts.unlike');
-
-// Routes for liking and unliking comments
-Route::post('/comments/{commentId}/like', [LikeController::class, 'likeComment'])->name('comments.like');
-Route::delete('/comments/{commentId}/unlike', [LikeController::class, 'unlikeComment'])->name('comments.unlike');
-
-Route::get('/db-test', function () {
-    try {
-        DB::connection()->getPdo();
-        return "Database connection is working.";
-    } catch (\Exception $e) {
-        return "Could not connect to the database. Error: " . $e->getMessage();
-    }
-});
-// Route for displaying all users
-Route::get('/users', [UserController::class, 'index'])->name('users.index');
-
-// Route for displaying a single user
-Route::get('/users/{id}', [UserController::class, 'show'])->name('users.show');
-
-// Profile routes
-Route::get('/profiles', [ProfileController::class, 'index'])->name('profiles.index');
-Route::get('/profiles/create', [ProfileController::class, 'create'])->name('profiles.create');
-Route::post('/profiles', [ProfileController::class, 'store'])->name('profiles.store');
-Route::get('/profiles/{id}', [ProfileController::class, 'show'])->name('profiles.show');
-Route::get('/profiles/{id}/edit', [ProfileController::class, 'edit'])->name('profiles.edit');
-Route::put('/profiles/{id}', [ProfileController::class, 'update'])->name('profiles.update');
-Route::delete('/profiles/{id}', [ProfileController::class, 'destroy'])->name('profiles.destroy');
-
-Route::get('/food', function () {
-    return view('food');
+// Authentication routes for login, register, and guest pages
+Route::middleware('guest')->group(function () {
+    Route::get('/login', [\App\Http\Controllers\Auth\LoginController::class, 'showLoginForm'])->name('login');
+    Route::post('/login', [\App\Http\Controllers\Auth\LoginController::class, 'login']);
+    Route::get('/register', [\App\Http\Controllers\Auth\RegisterController::class, 'showRegistrationForm'])->name('register');
+    Route::post('/register', [\App\Http\Controllers\Auth\RegisterController::class, 'register']);
 });
 
-Route ::get('/home', function(){
-    return view('home');
+// Protected routes (only accessible after authentication)
+Route::middleware('auth')->group(function () {
+    // Profile management
+    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
+    Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
+    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+
+    // Resource routes for posts and comments
+    Route::resource('posts', PostController::class);
+    Route::resource('comments', CommentController::class);
+
+    // Logout
+    Route::post('/logout', [\App\Http\Controllers\Auth\LoginController::class, 'logout'])->name('logout');
 });

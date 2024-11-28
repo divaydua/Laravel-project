@@ -9,6 +9,18 @@
         <div class="alert alert-success">{{ session('success') }}</div>
     @endif
 
+    @if ($post->likes->where('user_id', auth()->id())->count())
+    <form action="{{ route('posts.unlike', $post->id) }}" method="POST">
+        @csrf
+        @method('DELETE')
+        <button type="submit" class="btn btn-danger">Unlike</button>
+    </form>
+    @else
+    <form action="{{ route('posts.like', $post->id) }}" method="POST">
+        @csrf
+        <button type="submit" class="btn btn-primary">Like</button>
+    </form>
+    @endif
     <a href="{{ route('posts.create') }}" class="btn btn-primary mb-3">Create New Post</a>
 
     @if ($posts->isEmpty())

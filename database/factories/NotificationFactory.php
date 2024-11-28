@@ -17,7 +17,12 @@ class NotificationFactory extends Factory
     public function definition(): array
     {
         return [
-            //
+            'sender_id' => User::inRandomOrder()->first()->id, // Random sender
+            'receiver_id' => User::inRandomOrder()->first()->id, // Random receiver
+            'type' => $this->faker->randomElement(['like', 'comment', 'follow']), // Random type
+            'message' => $this->faker->sentence(), // Random message
+            'is_read' => $this->faker->boolean(50), // 50% chance of being read
         ];
+    }
     }
 }
