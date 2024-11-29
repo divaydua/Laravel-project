@@ -9,12 +9,15 @@ class PostController extends Controller
 {
     //
        // Display paginated posts
+      
        public function index()
        {
-           $posts = Post::paginate(20); // Fetch posts with pagination (5 per page)
+           // Fetch all posts with their likes and users
+           $posts = Post::with(['user', 'likes', 'comments.user'])->paginate(10); // Load comments with their users
+           
            return view('posts.index', compact('posts'));
        }
-   
+
        // Show the form for creating a new post
        public function create()
        {
