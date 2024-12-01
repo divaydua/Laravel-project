@@ -3,23 +3,13 @@
 @section('title', 'Comments')
 
 @section('content')
-    <h1>Comments for "{{ $post->title }}"</h1>
+<h1>Comments for "{{ $post->title }}"</h1>
 
-    <a href="{{ route('comments.create', $post->id) }}" class="btn btn-primary">Add Comment</a>
+<a href="{{ route('comments.create', $post->id) }}" class="btn btn-primary">Add Comment</a>
 
-    @if ($comment->likes->where('user_id', auth()->id())->count())
-    <form action="{{ route('comments.unlike', $comment->id) }}" method="POST">
-        @csrf
-        @method('DELETE')
-        <button type="submit" class="btn btn-danger">Unlike</button>
-    </form>
-    @else
-    <form action="{{ route('comments.like', $comment->id) }}" method="POST">
-        @csrf
-        <button type="submit" class="btn btn-primary">Like</button>
-    </form>
-    @endif
-
+@if ($comments->isEmpty())
+    <p>No comments yet. Be the first to comment!</p>
+@else
     <ul>
         @foreach ($comments as $comment)
             <li>
@@ -38,4 +28,44 @@
     </ul>
 
     {{ $comments->links() }}
+@endif
 @endsection
+
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    const commentForms = document.querySelectorAll('.comment-form');
+
+    commentForms.forEach(form => {
+        form.addEventListener('submit', function (e) {
+            e.preventDefault();
+
+            const postId = form.dataset.postId;
+            const formData = new FormData(form);
+            const commentsList = document.querySelector(`#comments-list-${postId}`);
+
+            fetch(`/posts/${postId}/comments`, {
+                method: 'POST',
+                headers: {
+                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
+                },
+                body: formData,
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.comment) {
+                    const newComment = document.createElement('li');
+                    newComment.innerHTML = `
+                        <p>${data.comment.content}</p>
+                        <p><strong>By:</strong> ${data.comment.user.name}</p>
+                    `;
+                    commentsList.prepend(newComment);
+                    form.querySelector('textarea').value = '';
+                } else {
+                    alert('Failed to add comment.');
+                }
+            })
+            .catch(error => console.error('Error:', error));
+        });
+    });
+});
+</script>

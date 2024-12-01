@@ -12,6 +12,13 @@
                     {{ __("You're logged in!") }}
                 </div>
             </div>
+
+            <!-- Link to Posts Index Page -->
+            <div class="mt-6 text-center">
+                <a href="{{ route('posts.index') }}" class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded">
+                    View All Posts
+                </a>
+            </div>
         </div>
     </div>
 </x-app-layout>

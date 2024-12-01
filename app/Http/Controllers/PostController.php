@@ -24,25 +24,25 @@ class PostController extends Controller
            return view('posts.create');
        }
    
-       // Store a newly created post in the database
-       public function store(Request $request)
-       {
-           $request->validate([
-               'title' => 'required|max:255',
-               'content' => 'required',
-           ]);
+       public function store(Request $request, $postId)
+{
+    dd($postId); // Inspect the post ID being passed to the method
+
+    $post = Post::findOrFail($postId);
+
+    $request->validate([
+        'content' => 'required|string|max:500',
+    ]);
+
+    $post->comments()->create([
+        'content' => $request->content,
+        'user_id' => auth()->id(),
+    ]);
+
+    return redirect()->route('posts.index')->with('success', 'Comment added successfully.');
+}
    
-           Post::create($request->all());
-   
-           return redirect()->route('posts.index')->with('success', 'Post created successfully.');
-       }
-   
-       // Show the form for editing a post
-       public function edit(Post $post)
-       {
-           return view('posts.edit', compact('post'));
-       }
-   
+      
        // Update the specified post in the database
        public function update(Request $request, Post $post)
        {
@@ -56,11 +56,25 @@ class PostController extends Controller
            return redirect()->route('posts.index')->with('success', 'Post updated successfully.');
        }
    
-       // Delete the specified post
-       public function destroy(Post $post)
-       {
-           $post->delete();
-   
-           return redirect()->route('posts.index')->with('success', 'Post deleted successfully.');
-       }
+       public function edit(Post $post)
+    {
+    // Ensure the user is authorized to edit the post
+    if ($post->user_id !== auth()->id() && !auth()->user()->isAdmin()) {
+        abort(403, 'Unauthorized action.');
+    }
+
+    return view('posts.edit', compact('post'));
+    }  
+
+    public function destroy(Post $post)
+    {
+    // Ensure the user is authorized to delete the post
+    if ($post->user_id !== auth()->id() && !auth()->user()->isAdmin()) {
+        abort(403, 'Unauthorized action.');
+    }
+
+    $post->delete();
+
+    return redirect()->route('posts.index')->with('success', 'Post deleted successfully.');
+    }
 }
