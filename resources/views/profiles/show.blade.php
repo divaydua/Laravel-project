@@ -8,6 +8,6 @@
     <p><strong>Bio:</strong> {{ $profile->bio }}</p>
 
     @if ($profile->profile_picture)
-        <img src="{{ asset('storage/' . $profile->profile_picture) }}" alt="Profile Picture" style="width: 150px;">
+        <img src="{{ asset('storage/' . $profile->profile_picture) }}" alt="Profile Picture" style="width: 5px;">
     @endif
 @endsection

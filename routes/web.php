@@ -58,5 +58,6 @@ Route::put('/comments/{id}', [CommentController::class, 'update'])->middleware([
 
 // Delete Comment
 Route::delete('/comments/{id}', [CommentController::class, 'destroy'])->middleware(['auth'])->name('comments.destroy');
+
 // Authentication Routes
 require __DIR__.'/auth.php';

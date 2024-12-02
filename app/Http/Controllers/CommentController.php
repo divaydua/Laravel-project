@@ -60,7 +60,7 @@ public function update(Request $request, $id)
 
     $comment->update(['content' => $request->content]);
 
-    return redirect()->route('comment.index', $comment->post_id)
+    return redirect()->route('posts.index', $comment->post_id)
                      ->with('success', 'Comment updated successfully.');
 }
 
@@ -74,7 +74,7 @@ public function destroy($id)
 
     $comment->delete();
 
-    return redirect()->route('comment.index', $comment->post_id)
+    return redirect()->route('posts.index', $comment->post_id)
                      ->with('success', 'Comment deleted successfully.');
 }
 }
