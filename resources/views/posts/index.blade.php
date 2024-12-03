@@ -36,11 +36,14 @@
                     </div>
                 </div>
 
-                <!-- Post Content -->
-                <div class="p-6">
-                    <h3 class="text-lg font-semibold text-gray-800">{{ $post->title }}</h3>
-                    <p class="text-gray-600 mt-2">{{ $post->content }}</p>
-                </div>
+               <!-- Post Content -->
+<div class="p-6">
+    @if ($post->image)
+        <img src="{{ asset('storage/' . $post->image) }}" alt="Post Image" class="w-full h-auto rounded-lg mb-4">
+    @endif
+    <h3 class="text-lg font-semibold text-gray-800">{{ $post->title }}</h3>
+    <p class="text-gray-600 mt-2">{{ $post->content }}</p>
+</div>
 
                 <!-- Post Actions -->
                 <div class="flex items-center px-6 py-4 border-t bg-gray-50">
@@ -68,7 +71,7 @@
                     @else
                         <ul class="space-y-4">
                             @foreach ($post->comments as $comment)
-                                <li class="flex items-start space-x-4 mb-4">
+                                <li id="comment-{{ $comment->id }}" class="flex items-start space-x-4 mb-4">
                                     
                                     <div>
                                         <p class="text-sm font-bold">{{ $comment->user->name }}</p>
@@ -116,4 +119,105 @@
         </div>
     @endif
 </div>
+@endsection
+
+@section('scripts')
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+    // AJAX for likes
+    document.querySelectorAll('.like-button').forEach(button => {
+        button.addEventListener('click', async (e) => {
+            e.preventDefault();
+
+            const postId = button.getAttribute('data-post-id');
+            const action = button.getAttribute('data-action');
+            const url = action === 'like' ? `/posts/${postId}/like` : `/posts/${postId}/unlike`;
+
+            try {
+                const response = await fetch(url, {
+                    method: action === 'like' ? 'POST' : 'DELETE',
+                    headers: {
+                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
+                    },
+                });
+
+                if (response.ok) {
+                    const html = await response.text();
+                    document.getElementById(`like-section-${postId}`).innerHTML = html;
+                }
+            } catch (error) {
+                console.error('Error:', error);
+            }
+        });
+    });
+    //comments
+    document.querySelectorAll('.comment-form').forEach(form => {
+    form.addEventListener('submit', async (e) => {
+        e.preventDefault();
+
+        const postId = form.getAttribute('data-post-id');
+        const content = form.querySelector('textarea').value;
+
+        try {
+            const response = await fetch(`/posts/${postId}/comments`, {
+                method: 'POST',
+                headers: {
+                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ content }),
+            });
+
+            if (response.ok) {
+                const data = await response.json();
+
+                // Append the new comment's HTML to the comments section
+                const commentsSection = document.getElementById(`comments-section-${postId}`);
+                commentsSection.insertAdjacentHTML('beforeend', data.html);
+
+                // Reset the form
+                form.reset();
+            } else {
+                console.error('Failed to add comment:', await response.json());
+            }
+        } catch (error) {
+            console.error('Error:', error);
+        }
+    });
+});
+//edit comment
+document.querySelectorAll('.edit-comment-form').forEach(form => {
+    form.addEventListener('submit', async (e) => {
+        e.preventDefault();
+
+        const commentId = form.getAttribute('data-comment-id');
+        const content = form.querySelector('textarea').value;
+
+        try {
+            const response = await fetch(`/comments/${commentId}`, {
+                method: 'PUT',
+                headers: {
+                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ content }),
+            });
+
+            if (response.ok) {
+                const data = await response.json();
+
+                // Replace the comment HTML with the updated one
+                const commentElement = document.getElementById(`comment-${commentId}`);
+                commentElement.outerHTML = data.html;
+
+                // Optionally, close the edit form if displayed in a modal
+            } else {
+                console.error('Failed to update comment:', await response.json());
+            }
+        } catch (error) {
+            console.error('Error:', error);
+        }
+    });
+});
+</script>
 @endsection

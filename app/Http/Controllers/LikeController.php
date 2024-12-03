@@ -21,6 +21,10 @@ class LikeController extends Controller
 
         $post->likes()->create(['user_id' => auth()->id()]);
 
+        if (request()->ajax()) {
+            return response()->json(['message' => 'Liked successfully', 'likesCount' => $post->likes->count()]);
+        }
+
         return redirect()->back()->with('success', 'Post liked successfully.');
     }
 
@@ -36,6 +40,10 @@ class LikeController extends Controller
         }
 
         $like->delete();
+
+        if (request()->ajax()) {
+            return response()->json(['message' => 'Unliked successfully', 'likesCount' => $post->likes->count()]);
+        }
 
         return redirect()->back()->with('success', 'Post unliked successfully.');
     }

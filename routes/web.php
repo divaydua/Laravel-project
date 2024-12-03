@@ -15,6 +15,9 @@ Route::middleware('auth')->group(function () {
     Route::resource('posts', PostController::class);
 });
 
+use App\Http\Controllers\ImageUploadController;
+
+Route::post('/upload-image', [ImageUploadController::class, 'upload'])->name('image.upload');
 // Like/Unlike Routes
 Route::post('/posts/{post}/like', [LikeController::class, 'like'])->name('posts.like');
 Route::delete('/posts/{post}/unlike', [LikeController::class, 'unlike'])->name('posts.unlike');
@@ -59,5 +62,13 @@ Route::put('/comments/{id}', [CommentController::class, 'update'])->middleware([
 // Delete Comment
 Route::delete('/comments/{id}', [CommentController::class, 'destroy'])->middleware(['auth'])->name('comments.destroy');
 
+//Like
+
+// Like routes for comments
+Route::post('/comments/{comment}/like', [LikeController::class, 'likeComment'])->name('comments.like');
+Route::delete('/comments/{comment}/unlike', [LikeController::class, 'unlikeComment'])->name('comments.unlike');
+
+Route::post('/posts/{post}/like', [LikeController::class, 'likePost'])->name('posts.like');
+Route::delete('/posts/{post}/unlike', [LikeController::class, 'unlikePost'])->name('posts.unlike');
 // Authentication Routes
 require __DIR__.'/auth.php';

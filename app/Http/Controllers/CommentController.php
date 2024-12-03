@@ -8,73 +8,85 @@ use Illuminate\Http\Request;
 
 class CommentController extends Controller
 {
-    // Display a listing of comments for a specific post
-
+    // Store a newly created comment
     public function store(Request $request, $postId)
     {
-    $post = Post::findOrFail($postId);
+        $post = Post::findOrFail($postId);
 
-    $request->validate([
-        'content' => 'required|string|max:500',
-    ]);
-
-    $comment = $post->comments()->create([
-        'content' => $request->content,
-        'user_id' => auth()->id(),
-    ]);
-
-    // Return JSON response for AJAX
-    if ($request->ajax()) {
-        return response()->json([
-            'message' => 'Comment added successfully.',
-            'comment' => $comment->load('user'),
+        $request->validate([
+            'content' => 'required|string|max:500',
         ]);
+    
+        $comment = $post->comments()->create([
+            'content' => $request->content,
+            'user_id' => auth()->id(),
+        ]);
+    
+        if ($request->ajax()) {
+            // Render the comment partial view
+            $html = view('partials.comment', ['comment' => $comment])->render();
+            return response()->json(['html' => $html]);
+        }
+    
+        return redirect()->back()->with('success', 'Comment added successfully.');
     }
 
-    return redirect()->back()->with('success', 'Comment added successfully.');
-}
+    // Show the form for editing a comment
+    public function edit($id)
+    {
+        $comment = Comment::findOrFail($id);
 
-public function edit($id)
-{
-    $comment = Comment::findOrFail($id);
+        // Ensure the authenticated user owns the comment
+        if ($comment->user_id !== auth()->id()) {
+            abort(403, 'Unauthorized action.');
+        }
 
-    // Ensure only the owner can edit
-    if ($comment->user_id !== auth()->id()) {
-        abort(403, 'Unauthorized action.');
+        return response()->json(['comment' => $comment]);
     }
 
-    return view('comment.edit', compact('comment'));
-}
+    // Update the specified comment
+    public function update(Request $request, $id)
+    {
+        $comment = Comment::findOrFail($id);
 
-public function update(Request $request, $id)
-{
-    $comment = Comment::findOrFail($id);
-
-    if ($comment->user_id !== auth()->id()) {
-        abort(403, 'Unauthorized action.');
+        // Ensure the authenticated user owns the comment
+        if ($comment->user_id !== auth()->id()) {
+            abort(403, 'Unauthorized action.');
+        }
+    
+        $request->validate([
+            'content' => 'required|string|max:500',
+        ]);
+    
+        $comment->update([
+            'content' => $request->content,
+        ]);
+    
+        if ($request->ajax()) {
+            // Render the updated comment partial
+            $html = view('partials.comment', ['comment' => $comment])->render();
+            return response()->json(['html' => $html]);
+        }
+    
+        return redirect()->back()->with('success', 'Comment updated successfully.');
     }
 
-    $request->validate([
-        'content' => 'required|string|max:500',
-    ]);
+    // Delete the specified comment
+    public function destroy(Request $request, $id)
+    {
+        $comment = Comment::findOrFail($id);
 
-    $comment->update(['content' => $request->content]);
+        // Ensure the authenticated user owns the comment
+        if ($comment->user_id !== auth()->id()) {
+            abort(403, 'Unauthorized action.');
+        }
 
-    return redirect()->route('posts.index', $comment->post_id)
-                     ->with('success', 'Comment updated successfully.');
-}
+        $comment->delete();
 
-public function destroy($id)
-{
-    $comment = Comment::findOrFail($id);
+        if ($request->ajax()) {
+            return response()->json(['message' => 'Comment deleted successfully']);
+        }
 
-    if ($comment->user_id !== auth()->id()) {
-        abort(403, 'Unauthorized action.');
+        return redirect()->back()->with('success', 'Comment deleted successfully.');
     }
-
-    $comment->delete();
-
-    return redirect()->route('posts.index', $comment->post_id)
-                     ->with('success', 'Comment deleted successfully.');
-}
 }

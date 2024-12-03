@@ -12,16 +12,18 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('posts', function (Blueprint $table) {
-            $table->id();                                  // Primary key, auto-increments
-            $table->unsignedBigInteger('user_id');         // Foreign key to users table
-            $table->text('content');                       // Content of the post
-            $table->timestamps();                          // Timestamps for created_at and updated_at
+            $table->id();
+            $table->unsignedBigInteger('user_id'); // Foreign key
+            $table->string('title'); // Post title
+            $table->text('content'); // Post content
+            $table->string('image')->nullable(); // Image path
+            $table->timestamps();
         
             // Foreign key constraint
-            $table->foreign('user_id')->references('id')->on('users')         
-                  ->onDelete('cascade')->onUpdate('cascade');    // Deletes posts if the user is deleted
-
+            $table->foreign('user_id')->references('id')->on('users')
+                  ->onDelete('cascade')->onUpdate('cascade');
         });
+
     }
 
     public function down(): void
