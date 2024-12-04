@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Like;
 use App\Models\Post;
 use App\Models\Comment;
+use App\Models\Notification;
 use Illuminate\Http\Request;
 
 class LikeController extends Controller
@@ -20,6 +21,16 @@ class LikeController extends Controller
         }
 
         $post->likes()->create(['user_id' => auth()->id()]);
+        
+         // Send notification to the post owner
+        
+        Notification::create([
+            'sender_id' => auth()->id(),
+            'receiver_id' => $post->user_id,
+            'type' => 'like',
+            'message' => auth()->user()->name . ' liked your post.',
+        ]);
+    
 
         if (request()->ajax()) {
             return response()->json(['message' => 'Liked successfully', 'likesCount' => $post->likes->count()]);

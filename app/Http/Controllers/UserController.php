@@ -21,10 +21,13 @@ class UserController extends Controller
     // Display a single user
     public function show($id)
     {
-        // Find the user by ID
-        $user = User::findOrFail($id);
+        $user = User::with(['posts.comments', 'posts.likes'])->findOrFail($id);
 
-        // Return the view with user details
         return view('users.show', compact('user'));
     }
+    
+    public function notifications()
+{
+    return $this->hasMany(Notification::class, 'receiver_id');
+}
 }

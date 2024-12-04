@@ -19,6 +19,11 @@
                     <a href="{{ route('posts.index') }}" class="text-white font-semibold hover:text-gray-300">
                         {{ __('Posts') }}
                     </a>
+                    <li>
+                <a href="{{ route('notifications.index') }}" class="text-white font-semibold hover:text-gray-300 hover:text-gray-900">
+                  Notifications ({{ App\Models\Notification::where('receiver_id', auth()->id())->where('is_read', false)->count() }})
+      </a>
+</li>
                     @if(Auth::check())
                         <a href="{{ route('profiles.show', Auth::id()) }}" class="text-white font-semibold hover:text-gray-300">
                             {{ __('My Profile') }}

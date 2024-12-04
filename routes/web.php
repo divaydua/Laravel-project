@@ -5,7 +5,8 @@ use App\Http\Controllers\CommentController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\LikeController;
 use Illuminate\Support\Facades\Route;
-
+use App\Http\Controllers\UserController;
+use App\Http\Controllers\NotificationController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -16,6 +17,13 @@ Route::middleware('auth')->group(function () {
 });
 
 use App\Http\Controllers\ImageUploadController;
+
+
+//Notification
+Route::get('/notifications', [NotificationController::class, 'index'])->name('notifications.index');
+Route::post('/notifications/mark-as-read', [NotificationController::class, 'markAsRead'])->name('notifications.markAsRead');
+Route::delete('/notifications/{id}', [NotificationController::class, 'destroy'])->name('notifications.destroy');
+Route::post('/notifications/mark-all-as-read', [NotificationController::class, 'markAllAsRead'])->name('notifications.markAllAsRead');
 
 Route::post('/upload-image', [ImageUploadController::class, 'upload'])->name('image.upload');
 // Like/Unlike Routes
@@ -70,5 +78,8 @@ Route::delete('/comments/{comment}/unlike', [LikeController::class, 'unlikeComme
 
 Route::post('/posts/{post}/like', [LikeController::class, 'likePost'])->name('posts.like');
 Route::delete('/posts/{post}/unlike', [LikeController::class, 'unlikePost'])->name('posts.unlike');
+
+Route::get('/users/{id}', [UserController::class, 'show'])->name('users.show');
+Route::get('/users', [UserController::class, 'index'])->name('users.index');
 // Authentication Routes
 require __DIR__.'/auth.php';

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Comment;
 use App\Models\Post;
+use App\Models\Notification;
 use Illuminate\Http\Request;
 
 class CommentController extends Controller
@@ -22,11 +23,16 @@ class CommentController extends Controller
             'user_id' => auth()->id(),
         ]);
     
-        if ($request->ajax()) {
-            // Render the comment partial view
-            $html = view('partials.comment', ['comment' => $comment])->render();
-            return response()->json(['html' => $html]);
-        }
+        // Create notification if the commenter is not the post owner
+        
+            Notification::create([
+                'sender_id' => auth()->id(),
+                'receiver_id' => $post->user_id,
+                'type' => 'comment',
+                'message' => auth()->user()->name . ' commented on your post.',
+                'is_read' => false,
+            ]);
+        
     
         return redirect()->back()->with('success', 'Comment added successfully.');
     }

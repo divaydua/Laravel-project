@@ -29,8 +29,8 @@
                 <div class="flex items-center px-6 py-4 border-b">
                 <img src="{{ $post->user->profile_picture ? asset('storage/' . $post->user->profile_picture) : '/images/default-avatar.jpg' }}" alt="User Avatar" class="h-9 w-13 rounded-full object-cover border border-gray-300 shadow-sm">
                     <div class="ml-4">
-                        <a href="{{ route('profiles.show', $post->user->id) }}" class="font-bold text-gray-800 hover:underline">
-                            {{ $post->user->name }}
+                    <a href="{{ route('users.show', $post->user->id) }}" class="font-bold text-gray-800 hover:underline">
+                     {{ $post->user->name }}
                         </a>
                         <p class="text-sm text-gray-400">{{ $post->created_at->diffForHumans() }}</p>
                     </div>
@@ -39,7 +39,7 @@
                <!-- Post Content -->
 <div class="p-6">
     @if ($post->image)
-        <img src="{{ asset('storage/' . $post->image) }}" alt="Post Image" class="w-full h-auto rounded-lg mb-4">
+        <img src="{{ asset('/storage/app/public/images/' . $post->image) }}" alt="Post Image" class="w-full h-auto rounded-lg mb-4">
     @endif
     <h3 class="text-lg font-semibold text-gray-800">{{ $post->title }}</h3>
     <p class="text-gray-600 mt-2">{{ $post->content }}</p>
