@@ -88,4 +88,52 @@ class LikeController extends Controller
 
         return redirect()->back()->with('success', 'Comment unliked successfully.');
     }
+    public function like($type, $id)
+    {
+        $model = $this->getModel($type);
+        $item = $model::findOrFail($id);
+
+        if ($item->likes()->where('user_id', auth()->id())->exists()) {
+            return response()->json(['error' => 'Already liked'], 400);
+        }
+
+        $item->likes()->create(['user_id' => auth()->id()]);
+
+        // Trigger Notification
+        if ($item->user_id !== auth()->id()) { // Avoid self-notification
+            $item->user->notifications()->create([
+                'sender_id' => auth()->id(),
+                'type' => 'like',
+                'message' => 'Your ' . $type . ' was liked.',
+            ]);
+        }
+
+        return response()->json(['likesCount' => $item->likes->count()]);
+    }
+
+    public function unlike($type, $id)
+    {
+        $model = $this->getModel($type);
+        $item = $model::findOrFail($id);
+
+        $like = $item->likes()->where('user_id', auth()->id())->first();
+
+        if (!$like) {
+            return response()->json(['error' => 'Not liked yet'], 400);
+        }
+
+        $like->delete();
+
+        return response()->json(['likesCount' => $item->likes->count()]);
+    }
+
+    private function getModel($type)
+    {
+        $models = [
+            'post' => Post::class,
+            'comment' => Comment::class,
+        ];
+
+        return $models[$type] ?? abort(404, 'Invalid type');
+    }
 }

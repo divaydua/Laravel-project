@@ -31,6 +31,12 @@
     <a href="{{ route('profiles.index') }}" class="text-white font-semibold hover:text-gray-300">
         {{ __('My Profile') }}
     </a>
+    <a href="{{ route('quotes.random') }}" class="text-white hover:text-gray-300">
+                    Random Quote
+                </a>
+                <a href="{{ route('quotes.byAuthor', ['author' => 'Albert Einstein']) }}" class="text-white hover:text-gray-300">
+    Quotes by Author
+</a>
                 </div>
             </div>
 

@@ -12,6 +12,7 @@ return new class extends Migration
             $table->id(); // Primary key
             $table->unsignedBigInteger('user_id'); // Foreign key to users table
             $table->unsignedBigInteger('post_id'); // Foreign key to posts table
+            $table->morphs('likeable'); // Adds `likeable_id` and `likeable_type
             $table->timestamps(); // Timestamps for tracking
 
             // Composite unique constraint (user_id + post_id)

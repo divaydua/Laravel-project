@@ -8,7 +8,10 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\WeatherController;
+use App\Http\Controllers\QuoteController;
 
+Route::get('/quotes/random', [QuoteController::class, 'randomQuote'])->name('quotes.random');
+Route::get('/quotes/author/{author}', [QuoteController::class, 'quotesByAuthor'])->name('quotes.byAuthor');
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -36,6 +39,8 @@ Route::post('/upload-image', [ImageUploadController::class, 'upload'])->name('im
 Route::post('/posts/{post}/like', [LikeController::class, 'like'])->name('posts.like');
 Route::delete('/posts/{post}/unlike', [LikeController::class, 'unlike'])->name('posts.unlike');
 
+Route::post('/like/{type}/{id}', [LikeController::class, 'like'])->name('like');
+Route::delete('/unlike/{type}/{id}', [LikeController::class, 'unlike'])->name('unlike');
 // Post Routes
 Route::get('/posts', [PostController::class, 'index'])->name('posts.index');
 

@@ -1,37 +1,33 @@
 <?php
+
 namespace App\Http\Controllers;
 
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
 
 class WeatherController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        // Hardcoded API details for testing
-        $city = 'London'; // Default city
-        $apiKey = 'b0de75328d805d56cd4bb1283760127b'; // Replace with your OpenWeather API key
-        $baseUrl = 'https://api.openweathermap.org/data/2.5/';
+        // Default to 'London' if no city is provided
+        $city = $request->get('city', 'London');
+        $apiKey = 'b0de75328d805d56cd4bb1283760127b';
+        $baseUrl ='https://api.openweathermap.org/data/2.5/';
 
-        // Make the API request
+        // Fetch weather data
         $response = Http::get("{$baseUrl}weather", [
             'q' => $city,
             'appid' => $apiKey,
-            'units' => 'metric', // Metric for Celsius
+            'units' => 'metric',
         ]);
 
-        // Check if the response is successful
         if ($response->successful()) {
             $weather = $response->json();
-
-            // Return the data to a basic view
-            return view('weather.index', compact('weather'));
+            return view('weather.index', compact('weather', 'city'));
         } else {
-            // Handle errors
-            return response()->json([
-                'error' => 'Unable to fetch weather data',
-                'status' => $response->status(),
-                'details' => $response->json(),
-            ]);
+            // Handle error response
+            $error = $response->json()['message'] ?? 'Unable to fetch weather data.';
+            return view('weather.index', compact('city'))->withErrors(['error' => $error]);
         }
     }
 }

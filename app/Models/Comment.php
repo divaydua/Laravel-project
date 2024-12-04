@@ -9,7 +9,7 @@ class Comment extends Model
     use HasFactory;
 
     protected $fillable = ['content', 'user_id', 'post_id'];
-    
+
     public function user()
     {
         return $this->belongsTo(User::class); 
@@ -21,8 +21,7 @@ class Comment extends Model
     }
 
     public function likes()
-    {
-    return $this->hasMany(Like::class);
-    }
-
+{
+    return $this->morphMany(Like::class, 'likeable');
+}
 }
