@@ -7,6 +7,8 @@ use App\Http\Controllers\LikeController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\NotificationController;
+use App\Http\Controllers\WeatherController;
+
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -16,8 +18,12 @@ Route::middleware('auth')->group(function () {
     Route::resource('posts', PostController::class);
 });
 
-use App\Http\Controllers\ImageUploadController;
 
+Route::middleware(['auth'])->group(function () {
+    Route::get('/profiles', [ProfileController::class, 'index'])->name('profiles.index');
+});
+
+Route::get('/weather', [WeatherController::class, 'index'])->name('weather.index');
 
 //Notification
 Route::get('/notifications', [NotificationController::class, 'index'])->name('notifications.index');
@@ -33,8 +39,6 @@ Route::delete('/posts/{post}/unlike', [LikeController::class, 'unlike'])->name('
 // Post Routes
 Route::get('/posts', [PostController::class, 'index'])->name('posts.index');
 
-// Profile Routes
-Route::get('/profiles/{id}', [ProfileController::class, 'show'])->name('profiles.show');
 
 // Comment Routes (Nested)
 Route::prefix('posts/{post}')->middleware(['auth'])->group(function () {

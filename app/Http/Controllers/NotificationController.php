@@ -32,7 +32,8 @@ class NotificationController extends Controller
 
         $notification->update(['is_read' => true]);
 
-        return response()->json(['message' => 'Notification marked as read']);
+        return redirect()->route('notifications.index')->with('success', 'Notification marked as read');
+       
     }
 
     public function markAllAsRead()

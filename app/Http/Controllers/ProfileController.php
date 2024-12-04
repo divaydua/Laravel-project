@@ -12,6 +12,12 @@ use App\Models\Profile;
 
 class ProfileController extends Controller
 {
+    public function index()
+    {
+        $user = auth()->user(); // Fetch the authenticated user's data
+        return view('profiles.index', compact('user'));
+    }
+    
     public function show($id)
     {
         // Find the profile by ID
