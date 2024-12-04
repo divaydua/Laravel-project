@@ -17,25 +17,22 @@
                         {{ __('Dashboard') }}
                     </a>
                     <a href="{{ route('weather.index') }}" class="text-white font-semibold hover:text-gray-300">
-    Weather
+    Check Weather
 </a>
                     <a href="{{ route('posts.index') }}" class="text-white font-semibold hover:text-gray-300">
                         {{ __('Posts') }}
                     </a>
                     <li>
-                <a href="{{ route('notifications.index') }}" class="text-white font-semibold hover:text-gray-900">
+                <a href="{{ route('notifications.index') }}" class="text-white font-semibold hover:text-gray-300">
                   Notifications ({{ App\Models\Notification::where('receiver_id', auth()->id())->where('is_read', false)->count() }})
       </a>
 </li>
 </a>
-    <a href="{{ route('profiles.index') }}" class="text-white font-semibold hover:text-gray-300">
-        {{ __('My Profile') }}
-    </a>
-    <a href="{{ route('quotes.random') }}" class="text-white hover:text-gray-300">
+    <a href="{{ route('quotes.random') }}" class="text-white font-semibold hover:text-gray-300">
                     Random Quote
                 </a>
-                <a href="{{ route('quotes.byAuthor', ['author' => 'Albert Einstein']) }}" class="text-white hover:text-gray-300">
-    Quotes by Author
+                <a href="{{ route('quotes.byAuthor', ['author' => 'Albert Einstein']) }}" class="text-white font-semibold hover:text-gray-300">
+    Quotes by Authors
 </a>
                 </div>
             </div>
@@ -44,7 +41,7 @@
             @if(Auth::check())
                 <div class="hidden sm:flex sm:items-center">
                     <div class="relative">
-                        <button @click="open = !open" class="flex items-center text-sm font-medium text-white focus:outline-none">
+                        <button @click="open = !open" class="flex items-center text-sm font-semibold text-white focus:outline-none">
                             <img src="{{ Auth::user()->profile_picture ? asset('storage/' . Auth::user()->profile_picture) : '/images/default-avatar.jpg' }}" 
                                  alt="User Avatar" 
                                  class="h-8 w-8 rounded-full border border-gray-500">
@@ -54,7 +51,7 @@
                             </svg>
                         </button>
                         <div x-show="open" @click.away="open = false" class="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1 z-20">
-                            <a href="{{ route('profile.edit') }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                            <a href="{{ route('profiles.index') }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
                                 {{ __('Profile') }}
                             </a>
                             <form method="POST" action="{{ route('logout') }}" class="block">

@@ -72,7 +72,7 @@ Route::middleware('auth')->group(function () {
 
 // Edit Comment
 Route::get('/comments/{id}/edit', [CommentController::class, 'edit'])->middleware(['auth'])->name('comments.edit');
-
+Route::get('/profile', [ProfileController::class, 'edit'])->name('profiles.edit');
 // Update Comment
 Route::put('/comments/{id}', [CommentController::class, 'update'])->middleware(['auth'])->name('comments.update');
 

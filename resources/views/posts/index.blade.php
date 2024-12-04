@@ -135,11 +135,11 @@
     </textarea>
     <button 
         type="submit" 
-        class="bg-gray-800 hover:bg-gray-900 text-white font-bold py-2 px-6 rounded-md mt-2 w-full">
+        class="bg-gray-800 hover:bg-gray-900 text-white font-bold py-2 px-6 rounded-md mt-2 ">
         Submit
     </button>
 </form>
-                </div>
+          </div>
             </div>
         @endforeach
 

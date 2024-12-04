@@ -11,7 +11,7 @@ class PostController extends Controller
     public function index()
     {
         // Fetch all posts with their relationships
-        $posts = Post::with(['user', 'likes', 'comments.user'])->paginate(10);
+        $posts = Post::with(['user', 'likes', 'comments.user'])->paginate(2);
 
         return view('posts.index', compact('posts'));
     }
@@ -27,11 +27,16 @@ class PostController extends Controller
     {
        
         $request->validate([
-            'title' => 'required|max:255',
+            'title' => 'required|max:20',
             'content' => 'required',
-            'image' => 'nullable|image|max:2048', // Validation for the image
+            'image' => 'nullable|image|max:2048',
+        ], [
+            'title.required' => 'Please provide a title for your post.',
+            'title.max' => 'The title cannot exceed 20 characters.',
+            'content.required' => 'The post content cannot be empty.',
+            'image.image' => 'The file must be a valid image format (jpg, png, etc.).',
+            'image.max' => 'The image size must not exceed 2MB.',
         ]);
-    
         // Prepare data for insertion
         $data = $request->only('title', 'content'); // Avoid using all(), as it may include unwanted fields
     
