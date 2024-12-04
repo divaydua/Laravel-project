@@ -26,33 +26,28 @@ class PostController extends Controller
     public function store(Request $request)
     {
        
-    $request->validate([
-        'title' => 'required|max:255',
-        'content' => 'required',
-        'image' => 'nullable|image|max:2048', // Validation for the image
-    ]);
-
-    $data = $request->all();
-
-    if ($request->hasFile('image')) {
-        $data['image'] = $request->file('image')->store('images', 'public'); // Store the image in 'storage/app/public/images'
-    }
-
-    $data['user_id'] = auth()->id(); // Assuming posts are associated with a user
-    Post::create($data);
-
-    return redirect()->route('posts.index')->with('success', 'Post created successfully.');
-    }
-
-    // Show the form for editing a post
-    public function edit(Post $post)
-    {
-        // Ensure the user is authorized to edit the post
-        if ($post->user_id !== auth()->id() && !auth()->user()->isAdmin()) {
-            abort(403, 'Unauthorized action.');
+        $request->validate([
+            'title' => 'required|max:255',
+            'content' => 'required',
+            'image' => 'nullable|image|max:2048', // Validation for the image
+        ]);
+    
+        // Prepare data for insertion
+        $data = $request->only('title', 'content'); // Avoid using all(), as it may include unwanted fields
+    
+        // Handle image upload
+        if ($request->hasFile('image')) {
+            $data['image'] = $request->file('image')->store('images', 'public'); // Store the image in 'storage/app/public/images'
+        } else {
+            $data['image'] = null; // Ensure this key is set, even if no image is provided
         }
+    
+        $data['user_id'] = auth()->id(); // Associate the post with the authenticated user
 
-        return view('posts.edit', compact('post'));
+        // Create the post
+        $post = Post::create($data);
+    
+        return redirect()->route('posts.index')->with('success', 'Post created successfully.');
     }
 
     // Update the specified post in the database

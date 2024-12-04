@@ -36,10 +36,12 @@
                     </div>
                 </div>
 
-               <!-- Post Content -->
+<!-- Post Content -->
 <div class="p-6">
-    @if ($post->image)
-        <img src="{{ asset('/storage/app/public/images/' . $post->image) }}" alt="Post Image" class="w-full h-auto rounded-lg mb-4">
+    @if ($post->image)    
+        <img src="{{ asset('storage/' . $post->image) }}" alt="Post Image" class="w-40 h-40 h-auto rounded-lg mb-4">
+    @else
+        <p>No image available for this post.</p>
     @endif
     <h3 class="text-lg font-semibold text-gray-800">{{ $post->title }}</h3>
     <p class="text-gray-600 mt-2">{{ $post->content }}</p>

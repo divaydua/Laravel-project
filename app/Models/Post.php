@@ -9,7 +9,12 @@ class Post extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['title', 'content', 'user_id'];
+    protected $fillable = [
+        'title',
+        'content',
+        'image',
+        'user_id', // Include this to allow user association
+    ];
 
     protected $with = ['user', 'likes', 'comments.user'];
 
