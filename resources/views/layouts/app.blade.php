@@ -42,5 +42,7 @@
             <a href="#" class="text-blue-400 hover:underline">Terms of Service</a>
         </footer>
     </div>
+     <!-- Page-Specific Scripts -->
+     @yield('scripts')
 </body>
 </html>

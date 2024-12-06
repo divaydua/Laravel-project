@@ -10,130 +10,103 @@ use Illuminate\Http\Request;
 
 class LikeController extends Controller
 {
-    // Add a like to a post
-    public function likePost($postId)
-    {
-        $post = Post::findOrFail($postId);
+   // Add a like to a post or comment
+   public function like($type, $id)
+   {
+    //    $model = $this->getModel($type, $id);
 
-        // Check if the authenticated user has already liked the post
-        if ($post->likes()->where('user_id', auth()->id())->exists()) {
-            return redirect()->back()->with('error', 'You have already liked this post.');
-        }
+    //    // Check if the authenticated user has already liked
+    //    if ($model->likes()->where('user_id', auth()->id())->exists()) {
+    //        return redirect()->back()->with('error', 'Already liked');
+    //    }
 
-        $post->likes()->create(['user_id' => auth()->id()]);
-        
-         // Send notification to the post owner
-        
+    //    // Create a like
+    //    $model->likes()->create(['user_id' => auth()->id()]);
+
+    //    // Send notification
+    //    if ($type === 'post') {
+    //        $receiverId = $model->user_id; // For posts
+    //    } elseif ($type === 'comment') {
+    //        $receiverId = $model->user_id; // For comments
+    //    }
+
+    //    if ($receiverId !== auth()->id()) {
+    //        Notification::create([
+    //            'sender_id' => auth()->id(),
+    //            'receiver_id' => $receiverId,
+    //            'type' => 'like',
+    //            'message' => auth()->user()->name . ' liked your ' . $type,
+    //        ]);
+    //    }
+
+    //    return redirect()->back()->with('success', ucfirst($type) . ' liked successfully.');
+
+    $model = $type === 'post' ? Post::findOrFail($id) : Comment::findOrFail($id);
+
+    // Check if already liked
+    if ($model->likes()->where('user_id', auth()->id())->exists()) {
+        return response()->json(['error' => 'Already liked'], 400);
+    }
+
+    // Add a like
+    $model->likes()->create(['user_id' => auth()->id()]);
+
+    // Send notification
+    if ($type === 'post') {
+        $receiverId = $model->user_id;
+    } elseif ($type === 'comment') {
+        $receiverId = $model->user_id;
+    }
+
+    if ($receiverId !== auth()->id()) {
         Notification::create([
             'sender_id' => auth()->id(),
-            'receiver_id' => $post->user_id,
+            'receiver_id' => $receiverId,
             'type' => 'like',
-            'message' => auth()->user()->name . ' liked your post.',
+            'message' => auth()->user()->name . ' liked your ' . $type . '.',
         ]);
-    
-
-        if (request()->ajax()) {
-            return response()->json(['message' => 'Liked successfully', 'likesCount' => $post->likes->count()]);
-        }
-
-        return redirect()->back()->with('success', 'Post liked successfully.');
     }
 
-    // Remove a like from a post
-    public function unlikePost($postId)
-    {
-        $post = Post::findOrFail($postId);
+    return response()->json(['message' => 'Liked successfully', 'likesCount' => $model->likes()->count()]);
 
-        $like = $post->likes()->where('user_id', auth()->id())->first();
+   }
 
-        if (!$like) {
-            return redirect()->back()->with('error', 'You have not liked this post.');
-        }
+   // Remove a like from a post or comment
+   public function unlike($type, $id)
+   {
+    //    $model = $this->getModel($type, $id);
 
-        $like->delete();
+    //    $like = $model->likes()->where('user_id', auth()->id())->first();
 
-        if (request()->ajax()) {
-            return response()->json(['message' => 'Unliked successfully', 'likesCount' => $post->likes->count()]);
-        }
+    //    if (!$like) {
+    //        return redirect()->back()->with('error', 'Not liked yet');
+    //    }
 
-        return redirect()->back()->with('success', 'Post unliked successfully.');
+    //    $like->delete();
+
+    //    return redirect()->back()->with('success', ucfirst($type) . ' unliked successfully.');
+    $model = $type === 'post' ? Post::findOrFail($id) : Comment::findOrFail($id);
+
+    $like = $model->likes()->where('user_id', auth()->id())->first();
+
+    if (!$like) {
+        return response()->json(['error' => 'Not liked yet'], 400);
     }
 
-    // Add a like to a comment
-    public function likeComment($commentId)
-    {
-        $comment = Comment::findOrFail($commentId);
+    // Remove like
+    $like->delete();
 
-        if ($comment->likes()->where('user_id', auth()->id())->exists()) {
-            return redirect()->back()->with('error', 'You have already liked this comment.');
-        }
+    return response()->json(['message' => 'Unliked successfully', 'likesCount' => $model->likes()->count()]);
+   }
 
-        $comment->likes()->create(['user_id' => auth()->id()]);
+   private function getModel($type, $id)
+   {
+       if ($type === 'post') {
+           return Post::findOrFail($id);
+       } elseif ($type === 'comment') {
+           return Comment::findOrFail($id);
+       }
 
-        return redirect()->back()->with('success', 'Comment liked successfully.');
-    }
-
-    // Remove a like from a comment
-    public function unlikeComment($commentId)
-    {
-        $comment = Comment::findOrFail($commentId);
-
-        $like = $comment->likes()->where('user_id', auth()->id())->first();
-
-        if (!$like) {
-            return redirect()->back()->with('error', 'You have not liked this comment.');
-        }
-
-        $like->delete();
-
-        return redirect()->back()->with('success', 'Comment unliked successfully.');
-    }
-    public function like($type, $id)
-    {
-        $model = $this->getModel($type);
-        $item = $model::findOrFail($id);
-
-        if ($item->likes()->where('user_id', auth()->id())->exists()) {
-            return response()->json(['error' => 'Already liked'], 400);
-        }
-
-        $item->likes()->create(['user_id' => auth()->id()]);
-
-        // Trigger Notification
-        if ($item->user_id !== auth()->id()) { // Avoid self-notification
-            $item->user->notifications()->create([
-                'sender_id' => auth()->id(),
-                'type' => 'like',
-                'message' => 'Your ' . $type . ' was liked.',
-            ]);
-        }
-
-        return response()->json(['likesCount' => $item->likes->count()]);
-    }
-
-    public function unlike($type, $id)
-    {
-        $model = $this->getModel($type);
-        $item = $model::findOrFail($id);
-
-        $like = $item->likes()->where('user_id', auth()->id())->first();
-
-        if (!$like) {
-            return response()->json(['error' => 'Not liked yet'], 400);
-        }
-
-        $like->delete();
-
-        return response()->json(['likesCount' => $item->likes->count()]);
-    }
-
-    private function getModel($type)
-    {
-        $models = [
-            'post' => Post::class,
-            'comment' => Comment::class,
-        ];
-
-        return $models[$type] ?? abort(404, 'Invalid type');
-    }
+       abort(404, 'Invalid type');
+   }
 }

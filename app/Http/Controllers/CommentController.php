@@ -17,14 +17,14 @@ class CommentController extends Controller
         $request->validate([
             'content' => 'required|string|max:500',
         ]);
-    
+
         $comment = $post->comments()->create([
             'content' => $request->content,
             'user_id' => auth()->id(),
         ]);
-    
+
         // Create notification if the commenter is not the post owner
-        
+        if (auth()->id() !== $post->user_id) {
             Notification::create([
                 'sender_id' => auth()->id(),
                 'receiver_id' => $post->user_id,
@@ -32,8 +32,13 @@ class CommentController extends Controller
                 'message' => auth()->user()->name . ' commented on your post.',
                 'is_read' => false,
             ]);
-        
-    
+        }
+
+        if ($request->ajax()) {
+            $html = view('partials.comment', compact('comment'))->render();
+            return response()->json(['message' => 'Comment added successfully.', 'html' => $html]);
+        }
+
         return redirect()->back()->with('success', 'Comment added successfully.');
     }
 
@@ -42,7 +47,6 @@ class CommentController extends Controller
     {
         $comment = Comment::findOrFail($id);
 
-        // Ensure the authenticated user owns the comment
         if ($comment->user_id !== auth()->id()) {
             abort(403, 'Unauthorized action.');
         }
@@ -55,25 +59,21 @@ class CommentController extends Controller
     {
         $comment = Comment::findOrFail($id);
 
-        // Ensure the authenticated user owns the comment
         if ($comment->user_id !== auth()->id()) {
             abort(403, 'Unauthorized action.');
         }
-    
+
         $request->validate([
             'content' => 'required|string|max:500',
         ]);
-    
-        $comment->update([
-            'content' => $request->content,
-        ]);
-    
+
+        $comment->update(['content' => $request->content]);
+
         if ($request->ajax()) {
-            // Render the updated comment partial
-            $html = view('partials.comment', ['comment' => $comment])->render();
-            return response()->json(['html' => $html]);
+            $html = view('partials.comment', compact('comment'))->render();
+            return response()->json(['message' => 'Comment updated successfully.', 'html' => $html]);
         }
-    
+
         return redirect()->back()->with('success', 'Comment updated successfully.');
     }
 
@@ -82,7 +82,6 @@ class CommentController extends Controller
     {
         $comment = Comment::findOrFail($id);
 
-        // Ensure the authenticated user owns the comment
         if ($comment->user_id !== auth()->id()) {
             abort(403, 'Unauthorized action.');
         }
@@ -90,7 +89,7 @@ class CommentController extends Controller
         $comment->delete();
 
         if ($request->ajax()) {
-            return response()->json(['message' => 'Comment deleted successfully']);
+            return response()->json(['message' => 'Comment deleted successfully.']);
         }
 
         return redirect()->back()->with('success', 'Comment deleted successfully.');

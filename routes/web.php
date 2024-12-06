@@ -46,12 +46,17 @@ Route::get('/posts', [PostController::class, 'index'])->name('posts.index');
 
 
 // Comment Routes (Nested)
-Route::prefix('posts/{post}')->middleware(['auth'])->group(function () {
-    Route::post('/comments', [CommentController::class, 'store'])->name('comments.store');
-    Route::get('/comments/{comment}/edit', [CommentController::class, 'edit'])->name('comments.edit');
-    Route::put('/comments/{comment}', [CommentController::class, 'update'])->name('comments.update');
-    Route::delete('/comments/{comment}', [CommentController::class, 'destroy'])->name('comments.destroy');
-});
+// Route::prefix('posts/{post}')->middleware(['auth'])->group(function () {
+//     Route::post('/comments', [CommentController::class, 'store'])->name('comments.store');
+//     Route::get('/comments/{comment}/edit', [CommentController::class, 'edit'])->name('comments.edit');
+//     Route::put('/comments/{comment}', [CommentController::class, 'update'])->name('comments.update');
+//     Route::delete('/comments/{comment}', [CommentController::class, 'destroy'])->name('comments.destroy');
+// });
+
+//Comments
+Route::post('/comments/{postId}', [CommentController::class, 'store'])->name('comments.store');
+Route::put('/comments/{id}', [CommentController::class, 'update'])->name('comments.update');
+Route::delete('/comments/{id}', [CommentController::class, 'destroy'])->name('comments.destroy');
 
 // Welcome Page
 Route::get('/', function () {
@@ -71,22 +76,24 @@ Route::middleware('auth')->group(function () {
 });
 
 // Edit Comment
-Route::get('/comments/{id}/edit', [CommentController::class, 'edit'])->middleware(['auth'])->name('comments.edit');
+// Route::get('/comments/{id}/edit', [CommentController::class, 'edit'])->middleware(['auth'])->name('comments.edit');
 Route::get('/profile', [ProfileController::class, 'edit'])->name('profiles.edit');
 // Update Comment
-Route::put('/comments/{id}', [CommentController::class, 'update'])->middleware(['auth'])->name('comments.update');
+// Route::put('/comments/{id}', [CommentController::class, 'update'])->middleware(['auth'])->name('comments.update');
 
 // Delete Comment
-Route::delete('/comments/{id}', [CommentController::class, 'destroy'])->middleware(['auth'])->name('comments.destroy');
+// Route::delete('/comments/{id}', [CommentController::class, 'destroy'])->middleware(['auth'])->name('comments.destroy');
 
 //Like
 
 // Like routes for comments
-Route::post('/comments/{comment}/like', [LikeController::class, 'likeComment'])->name('comments.like');
-Route::delete('/comments/{comment}/unlike', [LikeController::class, 'unlikeComment'])->name('comments.unlike');
+//Route::post('/comments/{comment}/like', [LikeController::class, 'likeComment'])->name('comments.like');
+//Route::delete('/comments/{comment}/unlike', [LikeController::class, 'unlikeComment'])->name('comments.unlike');
 
-Route::post('/posts/{post}/like', [LikeController::class, 'likePost'])->name('posts.like');
-Route::delete('/posts/{post}/unlike', [LikeController::class, 'unlikePost'])->name('posts.unlike');
+
+// Likes for posts and comments
+Route::post('/like/{type}/{id}', [LikeController::class, 'like'])->name('like');
+Route::delete('/unlike/{type}/{id}', [LikeController::class, 'unlike'])->name('unlike');
 
 Route::get('/users/{id}', [UserController::class, 'show'])->name('users.show');
 Route::get('/users', [UserController::class, 'index'])->name('users.index');
