@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 
+
 class User extends Authenticatable
 {
     use HasFactory, Notifiable;
@@ -20,6 +21,7 @@ class User extends Authenticatable
         'name',       // Allow mass assignment of the name field
         'email',      // Allow mass assignment of the email field
         'password',   // Allow mass assignment of the password field
+        'role', // Define roles for authorisation
     ];
 
     /**

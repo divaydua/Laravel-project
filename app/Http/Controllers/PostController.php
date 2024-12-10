@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 use App\Models\Post;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
+use App\Models\User;
 
 class PostController extends Controller
 {
@@ -86,11 +87,14 @@ class PostController extends Controller
     // Delete the specified post
     public function destroy(Post $post)
     {
+        $users = auth()->user();
+
         // Ensure the user is authorized to delete the post
-        if ($post->user_id !== auth()->id() && !auth()->user()->isAdmin()) {
+        if ($post->user_id != auth()->id() && $users -> role != 'admin') {
             abort(403, 'Unauthorized action.');
         }
 
+        
         // Delete the image if it exists
         if ($post->image) {
             Storage::disk('public')->delete($post->image);

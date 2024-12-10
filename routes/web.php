@@ -9,6 +9,18 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\WeatherController;
 use App\Http\Controllers\QuoteController;
+use App\Http\Middleware\RoleMiddleware;
+use App\Http\Controllers\AdminController;
+
+Route::middleware(['auth'])->group(function () {
+    Route::get('/admin', [AdminController::class, 'index'])->name('admin.dashboard');
+    Route::get('/admin/posts', [AdminController::class, 'managePosts'])->name('admin.posts');
+    Route::get('/admin/users', [AdminController::class, 'manageUsers'])->name('admin.users');
+});
+
+Route::middleware([RoleMiddleware::class . ':admin'])->group(function () {
+    Route::get('/admin', [AdminController::class, 'index'])->name('admin.dashboard');
+});
 
 Route::get('/quotes/random', [QuoteController::class, 'randomQuote'])->name('quotes.random');
 Route::get('/quotes/author/{author}', [QuoteController::class, 'quotesByAuthor'])->name('quotes.byAuthor');

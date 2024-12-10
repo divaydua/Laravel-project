@@ -62,9 +62,19 @@
     </div>
 </div>
                 <!-- Post Actions -->
+              
                 <div class="flex items-center px-6 py-4 border-t bg-gray-50">
-
+    <!-- Admin-Specific Actions -->
+    @if (auth()->user()->role === 'admin')
+        <a href="{{ route('posts.edit', $post->id) }}" class="text-blue-500 hover:underline">Edit</a>
+        <form action="{{ route('posts.destroy', $post->id) }}" method="POST" class="ml-4">
+            @csrf
+            @method('DELETE')
+            <button type="submit" class="text-red-500 hover:underline" onclick="return confirm('Are you sure?')">Delete</button>
+        </form>
+    @endif
 </div>
+
                 <!-- Comments Section -->
                 <div class="p-6 bg-gray-50 ">
                     <h4 class="font-semibold text-gray-800 mb-2">Comments</h4>
@@ -77,6 +87,17 @@
 <ul class="space-y-4">
                 @foreach ($post->comments as $comment)
                     @include('partials._comment', ['comment' => $comment])
+                     <!-- Admin-Specific Actions for Comments -->
+                     @if (auth()->user()->role === 'admin')
+                        <div class="mt-2 flex items-center space-x-4">
+                            <a href="{{ route('comments.update', $comment->id) }}" class="text-blue-500 hover:underline">Edit</a>
+                            <form action="{{ route('comments.destroy', $comment->id) }}" method="POST" class="ml-4">
+                                @csrf
+                                @method('DELETE')
+                                <button type="submit" class="text-red-500 hover:underline" onclick="return confirm('Are you sure?')">Delete</button>
+                            </form>
+                        </div>
+                    @endif
                 @endforeach
             </ul>
         @endif
