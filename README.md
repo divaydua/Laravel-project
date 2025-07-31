@@ -1,66 +1,324 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# Laravel Social Media Platform
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+A modern, feature-rich social media and blog platform built with Laravel 11, featuring user authentication, post management, commenting system, likes, notifications, weather integration, and quote services.
 
-## About Laravel
+## 🚀 Features
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+### Core Functionality
+- **User Authentication & Authorization**
+  - Laravel Breeze authentication system
+  - Role-based access control (Admin/User roles)
+  - Email verification
+  - Password reset functionality
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+- **Social Media Features**
+  - Create, edit, and delete posts with image uploads
+  - Like/unlike posts and comments
+  - Comment system with nested replies
+  - User profiles with customizable information
+  - Real-time notifications
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+- **Admin Panel**
+  - Dashboard with user, post, and comment statistics
+  - User management
+  - Post moderation
+  - Admin-only access controls
 
-## Learning Laravel
+### Additional Services
+- **Weather Service**: Real-time weather information using OpenWeatherMap API
+- **Quote Service**: Random quotes and author-specific quotes using Quotable API
+- **Notification System**: Real-time notifications for user interactions
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+### Technical Features
+- **Modern UI/UX**: Built with Tailwind CSS and Alpine.js
+- **Responsive Design**: Mobile-first approach
+- **Image Management**: Secure file uploads with validation
+- **Database Relationships**: Properly structured Eloquent relationships
+- **API Integration**: External API consumption for weather and quotes
+- **Testing**: Comprehensive test suite with Pest PHP
 
-You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
+## 🛠️ Technology Stack
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+### Backend
+- **PHP 8.2+**
+- **Laravel 11.9** - Modern PHP framework
+- **MySQL/SQLite** - Database
+- **Laravel Breeze** - Authentication scaffolding
 
-## Laravel Sponsors
+### Frontend
+- **Tailwind CSS 3.1** - Utility-first CSS framework
+- **Alpine.js 3.4** - Lightweight JavaScript framework
+- **Vite** - Build tool and development server
+- **PostCSS** - CSS processing
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+### Development Tools
+- **Laravel Sail** - Docker development environment
+- **Laravel Pint** - PHP code style fixer
+- **Pest PHP** - Testing framework
+- **Faker** - Data generation for testing
 
-### Premium Partners
+## 📋 Prerequisites
 
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[WebReinvent](https://webreinvent.com/)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel/)**
-- **[Cyber-Duck](https://cyber-duck.co.uk)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Jump24](https://jump24.co.uk)**
-- **[Redberry](https://redberry.international/laravel/)**
-- **[Active Logic](https://activelogic.com)**
-- **[byte5](https://byte5.de)**
-- **[OP.GG](https://op.gg)**
+Before running this project, ensure you have:
 
-## Contributing
+- **PHP 8.2 or higher**
+- **Composer** (PHP package manager)
+- **Node.js & NPM** (for frontend assets)
+- **MySQL/PostgreSQL** or **SQLite** database
+- **Git** (for version control)
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+## 🚀 Installation
 
-## Code of Conduct
+1. **Clone the repository**
+   ```bash
+   git clone <repository-url>
+   cd Laravel-project
+   ```
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+2. **Install PHP dependencies**
+   ```bash
+   composer install
+   ```
 
-## Security Vulnerabilities
+3. **Install Node.js dependencies**
+   ```bash
+   npm install
+   ```
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+4. **Environment setup**
+   ```bash
+   cp .env.example .env
+   php artisan key:generate
+   ```
 
-## License
+5. **Configure database**
+   Edit `.env` file and set your database credentials:
+   ```env
+   DB_CONNECTION=mysql
+   DB_HOST=127.0.0.1
+   DB_PORT=3306
+   DB_DATABASE=your_database_name
+   DB_USERNAME=your_username
+   DB_PASSWORD=your_password
+   ```
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+6. **Run database migrations**
+   ```bash
+   php artisan migrate
+   ```
+
+7. **Seed the database (optional)**
+   ```bash
+   php artisan db:seed
+   ```
+
+8. **Create storage link**
+   ```bash
+   php artisan storage:link
+   ```
+
+9. **Build frontend assets**
+   ```bash
+   npm run build
+   ```
+
+10. **Start the development server**
+    ```bash
+    php artisan serve
+    ```
+
+## 🔧 Configuration
+
+### API Keys Setup
+
+For weather and quote services, you'll need to configure API keys:
+
+1. **Weather API** (OpenWeatherMap)
+   - Sign up at [OpenWeatherMap](https://openweathermap.org/api)
+   - Add your API key to the WeatherController
+
+2. **Quote API** (Quotable)
+   - No API key required (free service)
+
+### Environment Variables
+
+Key environment variables to configure:
+
+```env
+APP_NAME="Laravel Social Platform"
+APP_ENV=local
+APP_DEBUG=true
+APP_URL=http://localhost:8000
+
+DB_CONNECTION=mysql
+DB_HOST=127.0.0.1
+DB_PORT=3306
+DB_DATABASE=laravel_social
+DB_USERNAME=root
+DB_PASSWORD=
+
+MAIL_MAILER=smtp
+MAIL_HOST=mailpit
+MAIL_PORT=1025
+MAIL_USERNAME=null
+MAIL_PASSWORD=null
+MAIL_ENCRYPTION=null
+MAIL_FROM_ADDRESS="hello@example.com"
+MAIL_FROM_NAME="${APP_NAME}"
+```
+
+## 📁 Project Structure
+
+```
+Laravel-project/
+├── app/
+│   ├── Http/
+│   │   ├── Controllers/          # Application controllers
+│   │   ├── Middleware/           # Custom middleware
+│   │   └── Requests/             # Form request validation
+│   ├── Models/                   # Eloquent models
+│   ├── Services/                 # Business logic services
+│   └── View/                     # View components
+├── database/
+│   ├── factories/                # Model factories
+│   ├── migrations/               # Database migrations
+│   └── seeders/                  # Database seeders
+├── resources/
+│   ├── views/                    # Blade templates
+│   ├── css/                      # Stylesheets
+│   └── js/                       # JavaScript files
+├── routes/                       # Application routes
+├── storage/                      # File storage
+└── tests/                        # Application tests
+```
+
+## 🗄️ Database Schema
+
+### Core Tables
+- **users** - User accounts and authentication
+- **posts** - User-created posts with content and images
+- **comments** - Comments on posts
+- **likes** - Polymorphic likes for posts and comments
+- **profiles** - User profile information
+- **notifications** - User notifications
+
+### Key Relationships
+- Users have many Posts, Comments, and Likes
+- Posts belong to Users and have many Comments and Likes
+- Comments belong to Users and Posts
+- Likes are polymorphic (can be on Posts or Comments)
+- Users have one Profile
+- Users have many Notifications
+
+## 🧪 Testing
+
+Run the test suite:
+
+```bash
+# Run all tests
+php artisan test
+
+# Run tests with coverage
+php artisan test --coverage
+
+# Run specific test file
+php artisan test tests/Feature/PostTest.php
+```
+
+## 🚀 Deployment
+
+### Production Setup
+
+1. **Environment Configuration**
+   ```bash
+   APP_ENV=production
+   APP_DEBUG=false
+   ```
+
+2. **Optimize for Production**
+   ```bash
+   php artisan config:cache
+   php artisan route:cache
+   php artisan view:cache
+   composer install --optimize-autoloader --no-dev
+   npm run build
+   ```
+
+3. **Database Setup**
+   ```bash
+   php artisan migrate --force
+   ```
+
+### Server Requirements
+- PHP 8.2+
+- MySQL 5.7+ or PostgreSQL 10+
+- Composer
+- Node.js & NPM
+- Web server (Apache/Nginx)
+
+## 🔐 Security Features
+
+- **CSRF Protection** - Built-in Laravel CSRF protection
+- **SQL Injection Prevention** - Eloquent ORM with parameter binding
+- **XSS Protection** - Blade template escaping
+- **File Upload Security** - Image validation and secure storage
+- **Authentication** - Laravel Breeze with proper session management
+- **Authorization** - Role-based access control
+
+## 📱 Features in Detail
+
+### User Management
+- Registration and login with email verification
+- Password reset functionality
+- User profiles with customizable information
+- Role-based permissions (Admin/User)
+
+### Post System
+- Create, edit, and delete posts
+- Image upload support with validation
+- Rich text content
+- Pagination for better performance
+
+### Social Features
+- Like/unlike posts and comments
+- Comment system with user attribution
+- Real-time notifications
+- User activity tracking
+
+### Admin Features
+- Dashboard with statistics
+- User management
+- Post moderation
+- System overview
+
+### External Integrations
+- **Weather Service**: Real-time weather data
+- **Quote Service**: Inspirational quotes
+- **Email Notifications**: User activity notifications
+
+## 🤝 Contributing
+
+1. Fork the repository
+2. Create a feature branch (`git checkout -b feature/amazing-feature`)
+3. Commit your changes (`git commit -m 'Add amazing feature'`)
+4. Push to the branch (`git push origin feature/amazing-feature`)
+5. Open a Pull Request
+
+## 📄 License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+## 👨‍💻 Author
+
+This project was developed as part of a Master's degree module, demonstrating modern web development practices with Laravel.
+
+## 🆘 Support
+
+For support and questions:
+- Check the [Laravel Documentation](https://laravel.com/docs)
+- Review the code comments and documentation
+- Open an issue in the repository
+
+---
+
+**Note**: This is an educational project showcasing Laravel development best practices, modern web technologies, and full-stack development skills.
